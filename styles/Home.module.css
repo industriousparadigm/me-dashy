@@ -83,6 +83,8 @@
 .card {
   margin: 1rem;
   flex-basis: 45%;
+  display: flex;
+  align-items: center;
   padding: 1.5rem;
   text-align: left;
   color: inherit;
@@ -100,7 +102,6 @@
 }
 
 .card h3 {
-  margin: 0 0 1rem 0;
   font-size: 1.5rem;
 }
 
@@ -108,6 +109,15 @@
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
+}
+
+.tokenvalues {
+  margin-left: 1rem;
+}
+
+.greyedout {
+  color: grey;
+  font-size: 14px;
 }
 
 .logo {
