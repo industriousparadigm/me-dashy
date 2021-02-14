@@ -12,25 +12,25 @@ export default async (req, res) => {
     );
   } catch (error) {
     console.info("Failed to read user token from cookies.", error);
-    res.json(user);
-    return res.status(401).end();
+    res.status(401).end();
   }
 
   // connect to prisma database
-  try {
-    const userDbInfo = await prisma.user.findUnique({
-      where: { email: user.email },
-      include: {
-        assets: true,
-      },
-    });
+  if (user?.email) {
+    try {
+      const userDbInfo = await prisma.user.findUnique({
+        where: { email: user.email },
+        include: {
+          assets: true,
+        },
+      });
 
-    // add user tokens to user object
-    user.assets = userDbInfo.assets;
-  } catch (error) {
-    console.error("Error querying database.", error);
-    res.json(user);
-    return res.status(500).end();
+      // add user tokens to user object
+      user.assets = userDbInfo.assets;
+    } catch (error) {
+      console.error("Error querying database.", error);
+      res.status(500).end();
+    }
   }
 
   res.json(user);
