@@ -1,0 +1,14 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-width: 60vw;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.emailinput {
+  margin: 10px;
+}
+

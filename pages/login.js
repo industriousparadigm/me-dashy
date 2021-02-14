@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import { Magic } from "magic-sdk";
+import Head from "next/head";
+import styles from "styles/Login.module.css";
 
 export default function Login() {
   const router = useRouter();
@@ -8,8 +10,6 @@ export default function Login() {
     event.preventDefault();
 
     const { elements } = event.target;
-
-    console.log({ elements });
 
     // Add the Magic code here
     const decentralizedId = await new Magic(
@@ -24,8 +24,6 @@ export default function Login() {
       headers: { Authorization: `Bearer ${decentralizedId}` },
     });
 
-    console.log({ authRequest });
-
     if (authRequest.ok) {
       // We successfully logged in, our API
       // set authorization cookies and now we
@@ -37,10 +35,24 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="email">Email</label>
-      <input name="email" type="email" />
-      <button>Log in</button>
-    </form>
+    <>
+      <Head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+          if (document.cookie && document.cookie.includes('authed')) {
+            window.location.href = "/"
+          }
+        `,
+          }}
+        />
+      </Head>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h3>Log in using a magic link sent to your email</h3>
+        <label htmlFor="email">Email</label>
+        <input className={styles.emailinput} name="email" type="email" />
+        <button>Send me a link!</button>
+      </form>
+    </>
   );
 }

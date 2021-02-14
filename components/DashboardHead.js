@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-export const SiteHead = () => (
+export const DashboardHead = () => (
   <Head>
     <title>Me Dashy</title>
     <link rel="icon" href="/favicon.ico" />

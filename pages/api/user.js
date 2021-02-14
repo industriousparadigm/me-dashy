@@ -1,5 +1,6 @@
 import Iron from "@hapi/iron";
 import CookieService from "lib/cookie";
+import prisma from "lib/prisma";
 
 export default async (req, res) => {
   let user;
@@ -10,12 +11,27 @@ export default async (req, res) => {
       Iron.defaults
     );
   } catch (error) {
-    res.status(401).end();
+    console.info("Failed to read user token from cookies.", error);
+    res.json(user);
+    return res.status(401).end();
   }
 
-  // now we have access to the data inside of user
-  // and we could make database calls or just send back what we have
-  // in the token.
+  // connect to prisma database
+  try {
+    const userDbInfo = await prisma.user.findUnique({
+      where: { email: user.email },
+      include: {
+        assets: true,
+      },
+    });
+
+    // add user tokens to user object
+    user.assets = userDbInfo.assets;
+  } catch (error) {
+    console.error("Error querying database.", error);
+    res.json(user);
+    return res.status(500).end();
+  }
 
   res.json(user);
 };
