@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { Magic } from "magic-sdk";
 import Head from "next/head";
-import styles from "styles/Login.module.css";
 
 export default function Login() {
   const router = useRouter();
@@ -30,7 +29,7 @@ export default function Login() {
       // can redirect to the dashboard!
       router.push("/");
     } else {
-      console.log("Authentication failed.");
+      console.info("Authentication failed.");
     }
   };
 
@@ -47,10 +46,10 @@ export default function Login() {
           }}
         />
       </Head>
-      <form onSubmit={handleSubmit} className={styles.form}>
+      <form onSubmit={handleSubmit} className={"flex-form login-form"}>
         <h3>Log in using a magic link sent to your email</h3>
         <label htmlFor="email">Email</label>
-        <input className={styles.emailinput} name="email" type="email" />
+        <input className={"email-input"} name="email" type="email" />
         <button>Send me a link!</button>
       </form>
     </>

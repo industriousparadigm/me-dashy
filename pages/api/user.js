@@ -27,15 +27,25 @@ export default async (req, res) => {
   // connect to prisma database
   if (user?.email) {
     try {
-      const userDbInfo = await prisma.user.findUnique({
+      let userFromDb = await prisma.user.findUnique({
         where: { email: user.email },
         include: {
           assets: true,
         },
       });
 
-      // add user tokens to user object
-      user.assets = userDbInfo.assets;
+      // if user doesnt exist, create user
+      if (!userFromDb) {
+        userFromDb = await prisma.user.create({
+          data: {
+            email: user.email,
+          },
+        });
+      }
+
+      // add user info from DB to user object
+      user.assets = userFromDb.assets || [];
+      user.prismaId = userFromDb.id;
     } catch (error) {
       console.error("Error querying database.", error);
       res.json(user);

@@ -13,20 +13,36 @@ import useAuth from "hooks/useAuth";
 
 export default function Home({ tokens }) {
   const [userAssets, setUserAssets] = useState([]);
-  const [userUsdTotal, setUserUsdTotal] = useState(0);
 
   const { user, loading } = useAuth();
 
   useEffect(() => {
+    console.log("useEffect triggered");
     if (user && Array.isArray(tokens)) {
       const updatedAssets = buildUserAssets(user, tokens);
-      const updatedUsdTotal = getUserUsdTotal(updatedAssets);
       setUserAssets(updatedAssets);
-      setUserUsdTotal(updatedUsdTotal);
     }
   }, [user, tokens]);
 
-  console.log({ user, loading, tokens });
+  const editAsset = (assetId, newAmount) => {
+    // get index of asset to update
+    const index = userAssets.findIndex((asset) => asset.id === assetId);
+
+    // copy old asset and update its amount
+    const assetToUpdate = { ...userAssets[index] };
+    assetToUpdate.amountHeld = newAmount;
+    assetToUpdate.usdValueHeld = newAmount * parseFloat(assetToUpdate.price);
+
+    // create a new userAssets object and assign it the edited asset
+    const updatedAssets = [...userAssets];
+    updatedAssets[index] = assetToUpdate;
+
+    // set state
+    setUserAssets(updatedAssets);
+  };
+
+  // calculate total on every render
+  const userUsdTotal = getUserUsdTotal(userAssets);
 
   return (
     <div className={styles.container}>
@@ -40,8 +56,12 @@ export default function Home({ tokens }) {
           <h1>{loading ? "Loading..." : <Link href="/login">Log in</Link>}</h1>
         ) : (
           <>
-            <h2>{`Your assets are worth $${beautifyNumber(userUsdTotal)}`}</h2>
-            <TokensGrid userAssets={userAssets} />
+            {userAssets.length > 0 && (
+              <h2>{`Your assets are worth $${beautifyNumber(
+                userUsdTotal
+              )}`}</h2>
+            )}
+            <TokensGrid userAssets={userAssets} editAsset={editAsset} />
           </>
         )}
       </main>
