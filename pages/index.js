@@ -35,9 +35,7 @@ export default function Home({ tokens }) {
           {`A dashboard for the cripto grabbers`}
         </p>
         {!user ? (
-          <h1>
-            <Link href="/login">Log in</Link>
-          </h1>
+          <h1>{loading ? "Loading..." : <Link href="/login">Log in</Link>}</h1>
         ) : (
           <>
             <h2>{`Your assets are worth $${beautifyNumber(userUsdTotal)}`}</h2>
@@ -52,7 +50,14 @@ export default function Home({ tokens }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const tokens = await getTokens();
+  // hardcoded, oops
+  const userAssets = ["BTC", "ETH", "DAI", "LINK", "DOT", "ADA"];
+
+  const tokens = await getTokens(userAssets);
+
+  // TODO: use req to somehow get user (presumably from cookies)
+  // and send data nicely shaped already to the frontend
+
   return {
     props: {
       tokens,
