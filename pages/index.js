@@ -17,12 +17,13 @@ export default function Home({ tokens }) {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    console.log("useEffect triggered");
     if (user && Array.isArray(tokens)) {
       const updatedAssets = buildUserAssets(user, tokens);
       setUserAssets(updatedAssets);
     }
   }, [user, tokens]);
+
+  // const addAsset =
 
   const editAsset = (assetId, newAmount) => {
     // get index of asset to update
@@ -38,6 +39,14 @@ export default function Home({ tokens }) {
     updatedAssets[index] = assetToUpdate;
 
     // set state
+    setUserAssets(updatedAssets);
+  };
+
+  const deleteAsset = (assetId) => {
+    const updatedAssets = [];
+    userAssets.forEach(
+      (asset) => asset.id !== assetId && updatedAssets.push(asset)
+    );
     setUserAssets(updatedAssets);
   };
 
@@ -61,7 +70,11 @@ export default function Home({ tokens }) {
                 userUsdTotal
               )}`}</h2>
             )}
-            <TokensGrid userAssets={userAssets} editAsset={editAsset} />
+            <TokensGrid
+              userAssets={userAssets}
+              editAsset={editAsset}
+              deleteAsset={deleteAsset}
+            />
           </>
         )}
       </main>

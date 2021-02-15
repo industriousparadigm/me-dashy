@@ -43,6 +43,8 @@ export default async (req, res) => {
 
   // create a new asset belonging to that user
   let newAsset;
+
+  // sanitize data for DB
   const data = {
     tokenId: tokenId.toUpperCase(),
     amount: parseFloat(amount),
@@ -55,14 +57,6 @@ export default async (req, res) => {
     console.info("Failed to write new asset to DB", error);
     return res.status(500).end();
   }
-
-  // id       Int     @id @default(autoincrement())
-  // tokenId  String
-  // isStable Boolean @default(false)
-  // isFiat   Boolean @default(false)
-  // amount   Float
-  // owner    User    @relation(fields: [ownerId], references: [id])
-  // ownerId  Int
 
   res.json(newAsset);
 };

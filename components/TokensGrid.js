@@ -2,7 +2,7 @@ import styles from "styles/Home.module.css";
 import TokenCard from "./TokenCard";
 import TokenAdder from "./TokenAdder";
 
-export const TokensGrid = ({ userAssets, editAsset }) => {
+export const TokensGrid = ({ userAssets, editAsset, deleteAsset }) => {
   const userHasAssets = Array.isArray(userAssets) && userAssets.length > 0;
 
   return (
@@ -13,6 +13,7 @@ export const TokensGrid = ({ userAssets, editAsset }) => {
             <TokenCard
               tokenAttrs={asset}
               editAsset={editAsset}
+              deleteAsset={deleteAsset}
               key={asset.id}
             />
           ))
@@ -20,7 +21,7 @@ export const TokensGrid = ({ userAssets, editAsset }) => {
           <h3>You have no cripto :(</h3>
         )}
       </div>
-      <TokenAdder />
+      <TokenAdder userAssets={userAssets} />
     </>
   );
 };

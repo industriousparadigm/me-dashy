@@ -3,15 +3,22 @@ import styles from "styles/Home.module.css";
 import UsdIcon from "components/UsdIcon";
 import { beautifyNumber } from "lib";
 import { useState, useRef } from "react";
+import useAuth from "hooks/useAuth";
+import { deleteAssetFromDatabase } from "lib/api";
 
 export default function TokenCard({
   editAsset,
+  deleteAsset,
   tokenAttrs: { logo_url, name, id, price, amountHeld, usdValueHeld },
 }) {
   const [showInput, toggleInput] = useState(false);
   const [inputAmount, setInputAmount] = useState(amountHeld || 0);
 
   const amountInput = useRef(null);
+
+  const { user } = useAuth();
+
+  console.log({ user });
 
   const onAmountClick = () => {
     toggleInput(!showInput);
@@ -22,6 +29,12 @@ export default function TokenCard({
     event.preventDefault();
     editAsset(id, parseFloat(inputAmount));
     toggleInput(!showInput);
+  };
+
+  const onDelete = async () => {
+    const assetToDelete = user.assets.find((asset) => asset.tokenId === id);
+    await deleteAssetFromDatabase({ id: assetToDelete.id });
+    deleteAsset(id);
   };
 
   return (
@@ -49,6 +62,19 @@ export default function TokenCard({
         )}
         <h3>{`$${beautifyNumber(usdValueHeld)}`}</h3>
       </div>
+      <button
+        onClick={onDelete}
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          margin: "5px",
+          color: "red",
+          fontWeight: 900,
+        }}
+      >
+        X
+      </button>
     </div>
   );
 }

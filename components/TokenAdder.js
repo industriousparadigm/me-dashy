@@ -1,18 +1,39 @@
 import { createAssetInDatabase } from "lib/api";
 import { useState } from "react";
 
-export default function TokenAdder() {
+export default function TokenAdder({ userAssets }) {
   const [tokenId, setTokenId] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const onFormSubmit = (event) => {
+  const onFormSubmit = async (event) => {
     event.preventDefault();
 
-    // add token to database and attach to current user
-    createAssetInDatabase(tokenId, amount);
+    const sanitizedData = {
+      tokenId: tokenId.toUpperCase(),
+      amount: parseFloat(amount),
+    };
 
-    setAmount(0);
+    // get out if user already has this token
+    const isRepeatToken = userAssets.some(
+      (asset) => asset.id === sanitizedData.tokenId
+    );
+    if (isRepeatToken) {
+      setErrorMessage(`${tokenId} is already in dashboard`);
+      return;
+    }
+
+    // add token to database and attach to current user
+    const result = await createAssetInDatabase(sanitizedData);
+
+    console.log({ result });
+
+    // TODO: add token in React UI
+
+    // clear form
+    setAmount("");
     setTokenId("");
+    setErrorMessage("");
   };
 
   return (
@@ -36,6 +57,7 @@ export default function TokenAdder() {
           name="amount"
         />
         <button type="submit">Add</button>
+        {errorMessage && <span style={{ color: "red" }}>{errorMessage}</span>}
       </form>
     </>
   );

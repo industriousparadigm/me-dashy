@@ -82,6 +82,7 @@
 }
 
 .card {
+  position: relative;
   margin: 1rem;
   flex-basis: 45%;
   display: flex;
