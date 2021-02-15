@@ -26,6 +26,8 @@ export default function Home({ tokens }) {
     }
   }, [user, tokens]);
 
+  console.log({ user, loading, tokens });
+
   return (
     <div className={styles.container}>
       <DashboardHead />
@@ -49,9 +51,9 @@ export default function Home({ tokens }) {
   );
 }
 
-export async function getServerSideProps({ req }) {
-  // hardcoded, oops
-  const userAssets = ["BTC", "ETH", "DAI", "LINK", "DOT", "ADA"];
+export async function getServerSideProps() {
+  // avoid querying all 5000+ tokens
+  const userAssets = process.env.TOKENS_SUPPORTED;
 
   const tokens = await getTokens(userAssets);
 
