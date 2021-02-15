@@ -34,16 +34,13 @@ export default function Home({ tokens }) {
         <p className={styles.description}>
           {`A dashboard for the cripto grabbers`}
         </p>
-        {loading && (
+        {!user ? (
           <h1>
             <Link href="/login">Log in</Link>
           </h1>
-        )}
-        {user && (
+        ) : (
           <>
-            <h3>{`Your assets are worth $${beautifyNumber(
-              userUsdTotal
-            )} right now!`}</h3>
+            <h2>{`Your assets are worth $${beautifyNumber(userUsdTotal)}`}</h2>
             <TokensGrid userAssets={userAssets} />
           </>
         )}

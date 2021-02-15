@@ -4,6 +4,13 @@ import prisma from "lib/prisma";
 
 export default async (req, res) => {
   let user;
+
+  const authToken = CookieService.getAuthToken(req.cookies);
+
+  if (!authToken) {
+    return res.json(user);
+  }
+
   try {
     user = await Iron.unseal(
       CookieService.getAuthToken(req.cookies),
@@ -12,7 +19,8 @@ export default async (req, res) => {
     );
   } catch (error) {
     console.info("Failed to read user token from cookies.", error);
-    res.status(401).end();
+    res.json(user);
+    return res.status(401).end();
   }
 
   // connect to prisma database
@@ -29,7 +37,8 @@ export default async (req, res) => {
       user.assets = userDbInfo.assets;
     } catch (error) {
       console.error("Error querying database.", error);
-      res.status(500).end();
+      res.json(user);
+      return res.status(500).end();
     }
   }
 
