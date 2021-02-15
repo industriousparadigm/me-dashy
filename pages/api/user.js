@@ -8,6 +8,7 @@ export default async (req, res) => {
   const authToken = CookieService.getAuthToken(req.cookies);
 
   if (!authToken) {
+    res.status(401);
     return res.json(user);
   }
 
