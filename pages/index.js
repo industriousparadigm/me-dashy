@@ -8,8 +8,10 @@ import {
   beautifyNumber,
   buildUserAssets,
   getUserUsdTotal,
+  buildCriptoAsset,
 } from "lib";
 import useAuth from "hooks/useAuth";
+import { editAssetAmountInDatabase } from "lib/api";
 
 export default function Home({ tokens }) {
   const [userAssets, setUserAssets] = useState([]);
@@ -23,11 +25,33 @@ export default function Home({ tokens }) {
     }
   }, [user, tokens]);
 
-  // const addAsset =
+  const addAsset = (tokenId, amount) => {
+    // build a user asset
+    const newAsset = buildCriptoAsset({ tokenId, amount }, tokens);
 
-  const editAsset = (assetId, newAmount) => {
+    // add it to the userAssets array
+    const updatedUserAssets = [...userAssets, newAsset];
+    updatedUserAssets.sort((a, b) => b.usdValueHeld - a.usdValueHeld);
+
+    setUserAssets(updatedUserAssets);
+  };
+
+  const editAsset = async (tokenId, newAmount) => {
     // get index of asset to update
-    const index = userAssets.findIndex((asset) => asset.id === assetId);
+    const index = userAssets.findIndex((asset) => asset.id === tokenId);
+
+    // get database ID for this user-asset combo
+    const { id } = user.assets.find((asset) => asset.tokenId === tokenId);
+
+    // update asset amount in database
+    const payload = {
+      id,
+      amount: parseFloat(newAmount),
+    };
+
+    const result = await editAssetAmountInDatabase(payload);
+
+    if (!result) return;
 
     // copy old asset and update its amount
     const assetToUpdate = { ...userAssets[index] };
@@ -72,6 +96,7 @@ export default function Home({ tokens }) {
             )}
             <TokensGrid
               userAssets={userAssets}
+              addAsset={addAsset}
               editAsset={editAsset}
               deleteAsset={deleteAsset}
             />
@@ -86,9 +111,7 @@ export default function Home({ tokens }) {
 
 export async function getServerSideProps() {
   // avoid querying all 5000+ tokens
-  const userAssets = process.env.TOKENS_SUPPORTED;
-
-  const tokens = await getTokens(userAssets);
+  const tokens = await getTokens(process.env.NEXT_PUBLIC_TOKENS_SUPPORTED);
 
   // TODO: use req to somehow get user (presumably from cookies)
   // and send data nicely shaped already to the frontend

@@ -30,3 +30,38 @@ a {
 input {
   margin-bottom: 10px;
 }
+
+.delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 5px;
+  color: white;
+  font-weight: 900;
+  border: none;
+  padding: 5px 10px;
+  background-color: salmon;
+  border-radius: 5px;
+}
+
+.delete-button:hover {
+  background-color: red;
+}
+
+.input-small {
+  margin-right: 5px;
+  width: 60%;
+}
+
+.btn {
+  color: white;
+  font-weight: 900;
+  border: none;
+  padding: 4px 8px;
+  background-color: deepskyblue;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: mediumblue;
+}

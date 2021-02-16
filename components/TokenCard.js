@@ -12,13 +12,12 @@ export default function TokenCard({
   tokenAttrs: { logo_url, name, id, price, amountHeld, usdValueHeld },
 }) {
   const [showInput, toggleInput] = useState(false);
+  const [showDelete, toggleDelete] = useState(false);
   const [inputAmount, setInputAmount] = useState(amountHeld || 0);
 
   const amountInput = useRef(null);
 
   const { user } = useAuth();
-
-  console.log({ user });
 
   const onAmountClick = () => {
     toggleInput(!showInput);
@@ -38,7 +37,12 @@ export default function TokenCard({
   };
 
   return (
-    <div className={styles.card} key={id}>
+    <div
+      onMouseEnter={() => toggleDelete(true)}
+      onMouseLeave={() => toggleDelete(false)}
+      className={styles.card}
+      key={id}
+    >
       {logo_url && <Image src={logo_url} width={80} height={80} />}
       {id === "USD" && <UsdIcon width={80} height={80} />}
       <div className={styles.tokenvalues}>
@@ -51,30 +55,26 @@ export default function TokenCard({
         {showInput ? (
           <form onSubmit={onAmountSubmit}>
             <input
+              className="input-small"
               ref={amountInput}
               onChange={(e) => setInputAmount(e.target.value)}
               type="number"
               step="any"
             />
+            <button type="submit" className="btn">
+              <i className="fa fa-floppy-o"></i>
+            </button>
           </form>
         ) : (
           <p onClick={onAmountClick}>{beautifyNumber(amountHeld)}</p>
         )}
         <h3>{`$${beautifyNumber(usdValueHeld)}`}</h3>
       </div>
-      <button
-        onClick={onDelete}
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          margin: "5px",
-          color: "red",
-          fontWeight: 900,
-        }}
-      >
-        X
-      </button>
+      {showDelete && (
+        <button onClick={onDelete} className="delete-button">
+          <i className="fa fa-trash"></i>
+        </button>
+      )}{" "}
     </div>
   );
 }

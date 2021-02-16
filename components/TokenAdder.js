@@ -1,7 +1,7 @@
 import { createAssetInDatabase } from "lib/api";
 import { useState } from "react";
 
-export default function TokenAdder({ userAssets }) {
+export default function TokenAdder({ userAssets, addAsset }) {
   const [tokenId, setTokenId] = useState("");
   const [amount, setAmount] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,12 +23,19 @@ export default function TokenAdder({ userAssets }) {
       return;
     }
 
+    const isNotSupported = !process.env.NEXT_PUBLIC_TOKENS_SUPPORTED.includes(
+      tokenId.toUpperCase()
+    );
+    if (isNotSupported) {
+      setErrorMessage(`${tokenId} is not supported`);
+      return;
+    }
+
     // add token to database and attach to current user
     const result = await createAssetInDatabase(sanitizedData);
 
-    console.log({ result });
-
-    // TODO: add token in React UI
+    // add token in React UI
+    if (result) addAsset(result.tokenId, result.amount);
 
     // clear form
     setAmount("");
