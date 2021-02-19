@@ -1,34 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Me Dashy
 
-First, run the development server:
+The name stands for "my dashboard", but "Me Dashy" is just more fun to say.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Me Dashy allows you to set what tokens you have, and it calculates the USD value you hold on refresh. I created it for myself because I didn't have a centralized way to view my assets from the different wallets and exchanges.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Try it out! But beware: my database is not encrypted at the moment, so if you input the amount of cripto you hold, I could go and check it. I won't, but just warning you. Plus, I don't guarantee I won't delete the whole thing.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Tech
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [NextJS](https://nextjs.org) (front-end framework)
+- [Vercel](https://vercel.com) (full stack hosting)
+- [Heroku](https://www.heroku.com/) (database hosting)
+- [Nomics API](https://p.nomics.com/cryptocurrency-bitcoin-api) (live token values)
+- [Prisma](https://www.prisma.io) (database)
