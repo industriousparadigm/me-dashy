@@ -7,6 +7,8 @@ Me Dashy allows you to set what tokens you have, and it calculates the USD value
 
 [Try it out](https://me-dashy.vercel.app)! But beware: my database is not encrypted at the moment, so if you input the amount of cripto you hold, I could go and check it. I won't, but just warning you. Plus, I don't guarantee I won't delete the whole thing.
 
+You must use a real email, since that's the form of authentication. I promise I will never use it for advertising, distribute it or getting in touch with you in any way.
+
 ## Tech
 
 - [NextJS](https://nextjs.org) (front-end framework)
