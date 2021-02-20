@@ -47,10 +47,10 @@ export default function Login() {
         />
       </Head>
       <form onSubmit={handleSubmit} className={"flex-form login-form"}>
-        <h3>Log in using a magic link sent to your email</h3>
+        <h3>A log in link will be sent to your email</h3>
         <label htmlFor="email">Email</label>
-        <input className={"email-input"} name="email" type="email" />
-        <button>Send me a link!</button>
+        <input className="styled-input" name="email" type="email" />
+        <button className="btn-submit">Send me a link!</button>
       </form>
     </>
   );

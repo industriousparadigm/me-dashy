@@ -9,12 +9,17 @@ import {
   buildUserAssets,
   getUserUsdTotal,
   buildCriptoAsset,
+  buildUsdAsset,
+  getSupportedCriptoCodes,
 } from "lib";
 import useAuth from "hooks/useAuth";
 import { editAssetAmountInDatabase } from "lib/api";
+import { useRouter } from "next/router";
 
 export default function Home({ tokens }) {
   const [userAssets, setUserAssets] = useState([]);
+
+  const router = useRouter();
 
   const { user, loading } = useAuth();
 
@@ -25,9 +30,18 @@ export default function Home({ tokens }) {
     }
   }, [user, tokens]);
 
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const addAsset = (tokenId, amount) => {
+    const isFiat = process.env.NEXT_PUBLIC_FIAT_SUPPORTED.includes(
+      tokenId.toUpperCase()
+    );
     // build a user asset
-    const newAsset = buildCriptoAsset({ tokenId, amount }, tokens);
+    const newAsset = isFiat
+      ? buildUsdAsset({ tokenId, amount })
+      : buildCriptoAsset({ tokenId, amount }, tokens);
 
     // add it to the userAssets array
     const updatedUserAssets = [...userAssets, newAsset];
@@ -90,9 +104,18 @@ export default function Home({ tokens }) {
         ) : (
           <>
             {userAssets.length > 0 && (
-              <h2>{`Your assets are worth $${beautifyNumber(
-                userUsdTotal
-              )}`}</h2>
+              <>
+                <div className="total-value">
+                  <h1 style={{ marginBottom: 0 }}>
+                    {"$" + beautifyNumber(userUsdTotal)}
+                  </h1>
+                  <h3>Total value</h3>
+                </div>
+                <i
+                  onClick={refreshData}
+                  className="refresh fa fa-refresh fa-2x"
+                ></i>
+              </>
             )}
             <TokensGrid
               userAssets={userAssets}
@@ -111,7 +134,7 @@ export default function Home({ tokens }) {
 
 export async function getServerSideProps() {
   // avoid querying all 5000+ tokens
-  const tokens = await getTokens(process.env.NEXT_PUBLIC_TOKENS_SUPPORTED);
+  const tokens = await getTokens(getSupportedCriptoCodes());
 
   // TODO: use req to somehow get user (presumably from cookies)
   // and send data nicely shaped already to the frontend

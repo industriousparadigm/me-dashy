@@ -1,3 +1,5 @@
+import useAuth from "hooks/useAuth";
+import { badInputsCheck, isFiat } from "lib";
 import { createAssetInDatabase } from "lib/api";
 import { useState } from "react";
 
@@ -6,33 +8,30 @@ export default function TokenAdder({ userAssets, addAsset }) {
   const [amount, setAmount] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const { user } = useAuth();
+
   const onFormSubmit = async (event) => {
     event.preventDefault();
 
-    const sanitizedData = {
+    // find user id
+    const userPrismaId = user.prismaId;
+
+    const sanitizedInputs = {
       tokenId: tokenId.toUpperCase(),
       amount: parseFloat(amount),
+      isFiat: isFiat(tokenId),
+      ownerId: userPrismaId,
     };
 
-    // get out if user already has this token
-    const isRepeatToken = userAssets.some(
-      (asset) => asset.id === sanitizedData.tokenId
-    );
-    if (isRepeatToken) {
-      setErrorMessage(`${tokenId} is already in dashboard`);
-      return;
-    }
-
-    const isNotSupported = !process.env.NEXT_PUBLIC_TOKENS_SUPPORTED.includes(
-      tokenId.toUpperCase()
-    );
-    if (isNotSupported) {
-      setErrorMessage(`${tokenId} is not supported`);
+    // stop if inputs are bad
+    const errorMessage = badInputsCheck(userAssets, sanitizedInputs);
+    if (errorMessage) {
+      setErrorMessage(errorMessage);
       return;
     }
 
     // add token to database and attach to current user
-    const result = await createAssetInDatabase(sanitizedData);
+    const result = await createAssetInDatabase(sanitizedInputs);
 
     // add token in React UI
     if (result) addAsset(result.tokenId, result.amount);
@@ -47,23 +46,30 @@ export default function TokenAdder({ userAssets, addAsset }) {
     <>
       <h2>Add a token here!</h2>
       <form className="flex-form" onSubmit={onFormSubmit}>
-        <label htmlFor="tokenId">Token</label>
-        <input
-          onChange={(e) => setTokenId(e.target.value)}
-          value={tokenId}
-          type="text"
-          name="token"
-        />
-        <label htmlFor="amount">Amount</label>
-        <input
-          onChange={(e) => setAmount(e.target.value)}
-          value={amount}
-          placeholder={"amount"}
-          type="number"
-          step="any"
-          name="amount"
-        />
-        <button type="submit">Add</button>
+        <label htmlFor="tokenId">
+          <input
+            className="styled-input"
+            onChange={(e) => setTokenId(e.target.value)}
+            value={tokenId}
+            placeholder={"token code (BTC, ETH)"}
+            type="text"
+            name="token"
+          />
+        </label>
+        <label htmlFor="amount">
+          <input
+            className="styled-input"
+            onChange={(e) => setAmount(e.target.value)}
+            value={amount}
+            placeholder={"amount"}
+            type="number"
+            step="any"
+            name="amount"
+          />
+        </label>
+        <button className="btn-submit" type="submit">
+          Add
+        </button>
         {errorMessage && <span style={{ color: "red" }}>{errorMessage}</span>}
       </form>
     </>

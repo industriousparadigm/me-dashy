@@ -36,6 +36,11 @@ export default function TokenCard({
     deleteAsset(id);
   };
 
+  const onCloseInput = () => {
+    toggleInput(false);
+    setInputAmount(amountHeld);
+  };
+
   return (
     <div
       onMouseEnter={() => toggleDelete(true)}
@@ -53,16 +58,26 @@ export default function TokenCard({
           )}`}</span>
         </p>
         {showInput ? (
-          <form onSubmit={onAmountSubmit}>
+          <form className="token-add-form" onSubmit={onAmountSubmit}>
             <input
-              className="input-small"
+              className="styled-input input-small"
               ref={amountInput}
+              value={inputAmount}
               onChange={(e) => setInputAmount(e.target.value)}
               type="number"
               step="any"
             />
-            <button type="submit" className="btn">
+            <button type="submit" className="btn token-add-btn btn-pad-more">
               <i className="fa fa-floppy-o"></i>
+            </button>
+            <button
+              onClick={onCloseInput}
+              className="btn token-add-btn btn-pad-more"
+              style={{
+                backgroundColor: "orange",
+              }}
+            >
+              <i className="fa fa-close"></i>
             </button>
           </form>
         ) : (
