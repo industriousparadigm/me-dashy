@@ -1,5 +1,5 @@
 import useAuth from "hooks/useAuth";
-import { badInputsCheck, isFiat } from "lib";
+import { badInputsCheck, isFiat, isStablecoin } from "lib";
 import { createAssetInDatabase } from "lib/api";
 import { useState } from "react";
 
@@ -20,6 +20,7 @@ export default function TokenAdder({ userAssets, addAsset }) {
       tokenId: tokenId.toUpperCase(),
       amount: parseFloat(amount),
       isFiat: isFiat(tokenId),
+      isStablecoin: isStablecoin(tokenId),
       ownerId: userPrismaId,
     };
 

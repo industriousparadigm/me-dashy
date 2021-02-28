@@ -2,7 +2,7 @@ import prisma from "lib/prisma";
 
 export default async (req, res) => {
   // get tokenId and amount from req
-  const { tokenId, amount, isFiat, ownerId } = req.body;
+  const { tokenId, amount, isFiat, isStable, ownerId } = req.body;
 
   console.log({ ...req.body });
 
@@ -12,6 +12,7 @@ export default async (req, res) => {
     amount: parseFloat(amount),
     ownerId: parseInt(ownerId, 10),
     isFiat: !!isFiat,
+    isStable: !!isStable,
   };
 
   // create a new asset belonging to that user
