@@ -134,10 +134,8 @@ export default function Home({ tokens }) {
 
 export async function getServerSideProps() {
   // avoid querying all 5000+ tokens
-  const tokens = await getTokens(getSupportedCriptoCodes());
-
-  // TODO: use req to somehow get user (presumably from cookies)
-  // and send data nicely shaped already to the frontend
+  const tokensToQuery = getSupportedCriptoCodes();
+  const tokens = await getTokens(tokensToQuery);
 
   return {
     props: {

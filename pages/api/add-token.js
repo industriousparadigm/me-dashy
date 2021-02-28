@@ -1,12 +1,9 @@
 import prisma from "lib/prisma";
 
 export default async (req, res) => {
-  // get tokenId and amount from req
   const { tokenId, amount, isFiat, isStable, ownerId } = req.body;
 
-  console.log({ ...req.body });
-
-  // sanitize data for DB
+  // sanitize data for DB just in case
   const data = {
     tokenId: tokenId.toUpperCase(),
     amount: parseFloat(amount),
@@ -16,13 +13,11 @@ export default async (req, res) => {
   };
 
   // create a new asset belonging to that user
-  let newAsset;
   try {
-    newAsset = await prisma.asset.create({ data });
+    const newAsset = await prisma.asset.create({ data });
+    res.json(newAsset);
   } catch (error) {
     console.info("Failed to write new asset to DB", error);
     return res.status(500).end();
   }
-
-  res.json(newAsset);
 };

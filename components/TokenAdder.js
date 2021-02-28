@@ -20,7 +20,7 @@ export default function TokenAdder({ userAssets, addAsset }) {
       tokenId: tokenId.toUpperCase(),
       amount: parseFloat(amount),
       isFiat: isFiat(tokenId),
-      isStablecoin: isStablecoin(tokenId),
+      isStable: isStablecoin(tokenId),
       ownerId: userPrismaId,
     };
 
