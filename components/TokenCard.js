@@ -3,7 +3,7 @@ import { Box } from "styles/Box"
 import { GridRow } from "styles/GridRow"
 import { GreyedOutText } from "styles/GreyedOutText"
 import UsdIcon from "components/UsdIcon"
-import { beautifyNumber, slugify } from "lib"
+import { beautifyNumber, getLogoUrl } from "lib"
 import { useState, useRef } from "react"
 import useAuth from "hooks/useAuth"
 import { deleteAssetFromDatabase } from "lib/api"
@@ -12,15 +12,7 @@ import { Percentage24hChange } from "./Percentage24hChange"
 export default function TokenCard({
   editAsset,
   deleteAsset,
-  tokenAttrs: {
-    logo_url,
-    name,
-    id,
-    price,
-    amountHeld,
-    usdValueHeld,
-    "1d": oneDay,
-  },
+  tokenAttrs: { name, id, price, amountHeld, usdValueHeld, "1d": oneDay },
   userUsdTotal,
 }) {
   const [showInput, toggleInput] = useState(false)
@@ -54,12 +46,6 @@ export default function TokenCard({
   }
 
   const pctChange24h = parseFloat(oneDay?.price_change_pct) * 100
-
-  const getLogoUrl = (tokenName) => {
-    if (tokenName === "Dai")
-      return "https://cryptologos.cc/logos/thumbs/multi-collateral-dai.png?v=010"
-    return `https://cryptologos.cc/logos/thumbs/${slugify(name)}.png?v=010`
-  }
 
   return (
     <Card
