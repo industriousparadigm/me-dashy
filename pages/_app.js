@@ -1,3 +1,4 @@
+import "styles/meyer-reset.css";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {

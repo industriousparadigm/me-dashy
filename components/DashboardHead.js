@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from "next/head"
 
 export const DashboardHead = () => (
   <Head>
@@ -6,6 +6,11 @@ export const DashboardHead = () => (
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&family=Share+Tech+Mono&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
     />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -16,4 +21,4 @@ export const DashboardHead = () => (
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
   </Head>
-);
+)

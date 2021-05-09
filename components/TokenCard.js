@@ -1,67 +1,93 @@
-import Image from "next/image";
-import styles from "styles/Home.module.css";
-import UsdIcon from "components/UsdIcon";
-import { beautifyNumber } from "lib";
-import { useState, useRef } from "react";
-import useAuth from "hooks/useAuth";
-import { deleteAssetFromDatabase } from "lib/api";
+import styled from "styled-components"
+import { Box } from "styles/Box"
+import { GridRow } from "styles/GridRow"
+import { GreyedOutText } from "styles/GreyedOutText"
+import UsdIcon from "components/UsdIcon"
+import { beautifyNumber, slugify } from "lib"
+import { useState, useRef } from "react"
+import useAuth from "hooks/useAuth"
+import { deleteAssetFromDatabase } from "lib/api"
+import { Percentage24hChange } from "./Percentage24hChange"
 
 export default function TokenCard({
   editAsset,
   deleteAsset,
-  tokenAttrs: { logo_url, name, id, price, amountHeld, usdValueHeld },
+  tokenAttrs: {
+    logo_url,
+    name,
+    id,
+    price,
+    amountHeld,
+    usdValueHeld,
+    "1d": oneDay,
+  },
+  userUsdTotal,
 }) {
-  const [showInput, toggleInput] = useState(false);
-  const [showDelete, toggleDelete] = useState(false);
-  const [inputAmount, setInputAmount] = useState(amountHeld || 0);
+  const [showInput, toggleInput] = useState(false)
+  const [showDelete, toggleDelete] = useState(false)
+  const [inputAmount, setInputAmount] = useState(amountHeld || 0)
 
-  const amountInput = useRef(null);
+  const amountInputElement = useRef(null)
 
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const onAmountClick = () => {
-    toggleInput(!showInput);
-    setTimeout(() => amountInput.current?.focus(), 0);
-  };
+    toggleInput(!showInput)
+    setTimeout(() => amountInputElement.current?.focus(), 0)
+  }
 
   const onAmountSubmit = (event) => {
-    event.preventDefault();
-    editAsset(id, parseFloat(inputAmount));
-    toggleInput(!showInput);
-  };
+    event.preventDefault()
+    editAsset(id, parseFloat(inputAmount))
+    toggleInput(!showInput)
+  }
 
   const onDelete = async () => {
-    const assetToDelete = user.assets.find((asset) => asset.tokenId === id);
-    await deleteAssetFromDatabase({ id: assetToDelete.id });
-    deleteAsset(id);
-  };
+    const assetToDelete = user.assets.find((asset) => asset.tokenId === id)
+    await deleteAssetFromDatabase({ id: assetToDelete.id })
+    deleteAsset(id)
+  }
 
   const onCloseInput = () => {
-    toggleInput(false);
-    setInputAmount(amountHeld);
-  };
+    toggleInput(false)
+    setInputAmount(amountHeld)
+  }
+
+  const pctChange24h = parseFloat(oneDay?.price_change_pct) * 100
+
+  const getLogoUrl = (tokenName) => {
+    if (tokenName === "Dai")
+      return "https://cryptologos.cc/logos/thumbs/multi-collateral-dai.png?v=010"
+    return `https://cryptologos.cc/logos/thumbs/${slugify(name)}.png?v=010`
+  }
 
   return (
-    <div
+    <Card
       onMouseEnter={() => toggleDelete(true)}
       onMouseLeave={() => toggleDelete(false)}
-      className={styles.card}
       key={id}
     >
-      {logo_url && <Image src={logo_url} width={80} height={80} />}
-      {id === "USD" && <UsdIcon width={80} height={80} />}
-      <div className={styles.tokenvalues}>
-        <p>
-          <strong>{name}</strong>
-          <span className={styles.greyedout}>{` $${beautifyNumber(
-            price
-          )}`}</span>
-        </p>
+      <Box size={12}>
+        {id !== "USD" ? (
+          <img src={getLogoUrl(name)} width={48} height={48} />
+        ) : (
+          <UsdIcon width={48} height={48} />
+        )}
+      </Box>
+      <Box>
+        <strong>{name}</strong>
+        <GreyedOutText>{id}</GreyedOutText>
+      </Box>
+      <Box>
+        <p>{` $${beautifyNumber(price)}`}</p>
+        {pctChange24h ? <Percentage24hChange value={pctChange24h} /> : null}
+      </Box>
+      <Box>
         {showInput ? (
           <form className="token-add-form" onSubmit={onAmountSubmit}>
             <input
               className="styled-input input-small"
-              ref={amountInput}
+              ref={amountInputElement}
               value={inputAmount}
               onChange={(e) => setInputAmount(e.target.value)}
               type="number"
@@ -83,13 +109,30 @@ export default function TokenCard({
         ) : (
           <p onClick={onAmountClick}>{beautifyNumber(amountHeld)}</p>
         )}
-        <h3>{`$${beautifyNumber(usdValueHeld)}`}</h3>
-      </div>
+
+        <GreyedOutText>{`$${beautifyNumber(usdValueHeld)}`}</GreyedOutText>
+      </Box>
+      <Box size={10}>
+        <p>{beautifyNumber((usdValueHeld / userUsdTotal) * 100, 1)}%</p>
+      </Box>
       {showDelete && (
         <button onClick={onDelete} className="delete-button">
           <i className="fa fa-trash"></i>
         </button>
-      )}{" "}
-    </div>
-  );
+      )}
+    </Card>
+  )
 }
+
+const Card = styled(GridRow)`
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  transition: color 0.25s ease;
+
+  :hover,
+  :focus,
+  :active {
+    color: #0070f3;
+    border: 1px solid #0070f3;
+  }
+`

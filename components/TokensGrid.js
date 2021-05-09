@@ -1,6 +1,8 @@
-import styles from "styles/Home.module.css";
+import styled from "styled-components";
 import TokenCard from "./TokenCard";
 import TokenAdder from "./TokenAdder";
+import { getUserUsdTotal } from "lib";
+import TokensGridHeader from "./TokensGridHeader";
 
 export const TokensGrid = ({
   userAssets,
@@ -12,21 +14,32 @@ export const TokensGrid = ({
 
   return (
     <>
-      <div className={styles.grid}>
+      <Wrapper>
         {userHasAssets ? (
-          userAssets.map((asset) => (
-            <TokenCard
-              tokenAttrs={asset}
-              editAsset={editAsset}
-              deleteAsset={deleteAsset}
-              key={asset.id}
-            />
-          ))
+          <>
+            <TokensGridHeader />
+            {userAssets.map((asset) => (
+              <TokenCard
+                tokenAttrs={asset}
+                userUsdTotal={getUserUsdTotal(userAssets)}
+                editAsset={editAsset}
+                deleteAsset={deleteAsset}
+                key={asset.id}
+              />
+            ))}
+          </>
         ) : (
           <h3>You have no cripto :(</h3>
         )}
-      </div>
+      </Wrapper>
       <TokenAdder userAssets={userAssets} addAsset={addAsset} />
     </>
   );
 };
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 4px;
+`;
