@@ -1,13 +1,14 @@
-import { Box } from "styles/Box";
-import { GreyedOutText } from "styles/GreyedOutText";
-import { GridRow } from "styles/GridRow";
+import { Box } from "styles/Box"
+import { GreyedOutText } from "styles/GreyedOutText"
+import { GridRow } from "styles/GridRow"
+import { LogoBox } from "styles/LogoBox"
 
 export default function TokensGridHeader() {
   return (
     <GridRow>
-      <Box size={12}>
+      <LogoBox>
         <GreyedOutText>Logo</GreyedOutText>
-      </Box>
+      </LogoBox>
       <Box>
         <GreyedOutText>Token</GreyedOutText>
       </Box>
@@ -21,5 +22,5 @@ export default function TokensGridHeader() {
         <GreyedOutText>% wallet</GreyedOutText>
       </Box>
     </GridRow>
-  );
+  )
 }

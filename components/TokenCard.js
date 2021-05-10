@@ -8,6 +8,7 @@ import { useState, useRef } from "react"
 import useAuth from "hooks/useAuth"
 import { deleteAssetFromDatabase } from "lib/api"
 import { Percentage24hChange } from "./Percentage24hChange"
+import { LogoBox } from "styles/LogoBox"
 
 export default function TokenCard({
   editAsset,
@@ -53,13 +54,13 @@ export default function TokenCard({
       onMouseLeave={() => toggleDelete(false)}
       key={id}
     >
-      <Box size={12}>
+      <LogoBox>
         {id !== "USD" ? (
-          <img src={getLogoUrl(name)} width={48} height={48} />
+          <Logo src={getLogoUrl(name)} />
         ) : (
           <UsdIcon width={48} height={48} />
         )}
-      </Box>
+      </LogoBox>
       <Box>
         <strong>{name}</strong>
         <GreyedOutText>{id}</GreyedOutText>
@@ -111,7 +112,7 @@ export default function TokenCard({
 }
 
 const Card = styled(GridRow)`
-  border: 1px solid #eaeaea;
+  border: 1px solid lightgray;
   border-radius: 8px;
   transition: color 0.25s ease;
 
@@ -120,5 +121,16 @@ const Card = styled(GridRow)`
   :active {
     color: #0070f3;
     border: 1px solid #0070f3;
+  }
+`
+
+const Logo = styled.img`
+  object-fit: contain;
+  width: ${(p) => p.size || 48}px;
+  height: ${(p) => p.size || 48}px;
+
+  @media only screen and (max-width: 520px) {
+    width: 32px;
+    height: 32px;
   }
 `

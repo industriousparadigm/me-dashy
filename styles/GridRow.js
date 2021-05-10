@@ -5,7 +5,6 @@ export const GridRow = styled.div`
   font-size: 14px;
   width: 100%;
   display: flex;
-  gap: 16px;
   align-items: flex-start;
   justify-content: space-between;
   padding: 8px 16px;

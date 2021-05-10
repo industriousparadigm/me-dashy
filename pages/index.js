@@ -149,7 +149,6 @@ export async function getServerSideProps() {
 
 const Wrapper = styled.div`
   min-height: 100vh;
-  padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -157,7 +156,7 @@ const Wrapper = styled.div`
 `
 
 const Dashboard = styled.main`
-  padding: 5rem 0;
+  padding: 3rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -178,11 +177,13 @@ const SubTitle = styled.h2`
   font-family: "Share Tech Mono", monospace;
   line-height: 1.5;
   font-size: 1.5rem;
+  text-align: center;
 `
 
 const WalletTotalContainer = styled(Box)`
   font-size: 1.125rem;
   line-height: 1.5;
+  width: fit-content;
 `
 
 const WalletTotal = styled.h3`
