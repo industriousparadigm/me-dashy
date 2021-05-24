@@ -91,18 +91,37 @@ export default function Home({ tokens }) {
     setUserAssets(updatedAssets)
   }
 
+  const logout = async () => {
+    await fetch("/api/logout")
+    router.reload(window.location.pathname)
+  }
+
   // calculate total on every render
   const userUsdTotal = getUserUsdTotal(userAssets)
+
+  console.log("index rendered")
 
   return (
     <Wrapper>
       <DashboardHead />
+      <HeaderWrapper>
+        <HeaderContent>
+          {user ? (
+            <LogoutButton onClick={logout}>Log out</LogoutButton>
+          ) : (
+            <Link href="/login">
+              <LoginButton>Log in</LoginButton>
+            </Link>
+          )}
+          {user && user.email}
+        </HeaderContent>
+      </HeaderWrapper>
       <Dashboard>
-        <Header>Me Dashy</Header>
+        <MainHeading>Me Dashy</MainHeading>
         <SubTitle>{`A dashboard for cripto grabbers`}</SubTitle>
         <Spacer size={16} />
         {!user ? (
-          <h1>{loading ? "Loading..." : <Link href="/login">Log in</Link>}</h1>
+          <h1>{loading && "Loading..."}</h1>
         ) : (
           <>
             {userAssets.length > 0 && (
@@ -130,7 +149,7 @@ export default function Home({ tokens }) {
         )}
       </Dashboard>
 
-      <Footer>Rumo a Marte!</Footer>
+      <Footer>Rumo a marte! 🚀</Footer>
     </Wrapper>
   )
 }
@@ -153,10 +172,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 `
 
 const Dashboard = styled.main`
-  padding: 3rem 0;
+  padding: 2rem 0 3rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -166,7 +186,24 @@ const Dashboard = styled.main`
   max-width: 800px;
 `
 
-const Header = styled.h1`
+const HeaderWrapper = styled.header`
+  width: 100%;
+  border-bottom: 1px solid #eaeaea;
+`
+
+const HeaderContent = styled.div`
+  height: 60px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 14px;
+`
+
+const MainHeading = styled.h1`
   font-family: "Racing Sans One", cursive;
   margin: 0;
   line-height: 1.15;
@@ -193,7 +230,7 @@ const WalletTotal = styled.h3`
 
 const Footer = styled.footer`
   width: 100%;
-  height: 100px;
+  height: 60px;
   border-top: 1px solid #eaeaea;
   display: flex;
   justify-content: center;
@@ -202,4 +239,30 @@ const Footer = styled.footer`
 
 const Refresh = styled.i`
   padding: 4px;
+`
+
+const Button = styled.button`
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 0;
+`
+
+const LogoutButton = styled(Button)`
+  background-color: tomato;
+  color: #fff;
+
+  &:hover {
+    background-color: coral;
+  }
+`
+
+const LoginButton = styled(Button)`
+  background-color: dodgerblue;
+  color: #fff;
+
+  &:hover {
+    background-color: deepskyblue;
+  }
 `

@@ -16,9 +16,9 @@ export const TokensGrid = ({
   return (
     <>
       <Wrapper>
-        {userHasAssets ? (
+        {userHasAssets && (
           <>
-            <TokensGridHeader />
+            <TokensGridHeader key="header" />
             {userAssets.map((asset) => {
               return (
                 <>
@@ -34,8 +34,6 @@ export const TokensGrid = ({
               )
             })}
           </>
-        ) : (
-          <h3>You have no cripto :(</h3>
         )}
       </Wrapper>
       <Spacer size={36} />

@@ -16,7 +16,7 @@ export default function TokensGridHeader() {
         <GreyedOutText>Market value</GreyedOutText>
       </Box>
       <Box>
-        <GreyedOutText>Amount held</GreyedOutText>
+        <GreyedOutText>Amount (click to edit)</GreyedOutText>
       </Box>
       <Box size={10}>
         <GreyedOutText>% wallet</GreyedOutText>

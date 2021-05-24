@@ -45,11 +45,15 @@ export default function TokenAdder({ userAssets, addAsset }) {
     setErrorMessage("")
   }
 
+  const callToAction = "Add a token".concat(
+    userAssets.length > 0 ? "" : " to get started!"
+  )
+
   return (
     <>
-      <h2>Add a token</h2>
+      <h2>{callToAction}</h2>
       <Spacer size={8} />
-      <Form onSubmit={onFormSubmit}>
+      <Form onSubmit={onFormSubmit} autocomplete="off">
         <Label htmlFor="tokenId">
           <Input
             onChange={(e) => setTokenId(e.target.value)}
@@ -57,6 +61,7 @@ export default function TokenAdder({ userAssets, addAsset }) {
             placeholder={"token code (BTC, ETH)"}
             type="text"
             name="token"
+            autocomplete="off"
           />
         </Label>
         <Spacer size={4} />
@@ -68,6 +73,7 @@ export default function TokenAdder({ userAssets, addAsset }) {
             type="number"
             step="any"
             name="amount"
+            autocomplete="off"
           />
         </Label>
         <Spacer size={4} />

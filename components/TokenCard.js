@@ -9,6 +9,7 @@ import useAuth from "hooks/useAuth"
 import { deleteAssetFromDatabase } from "lib/api"
 import { Percentage24hChange } from "./Percentage24hChange"
 import { LogoBox } from "styles/LogoBox"
+import Spacer from "styles/Spacer"
 
 export default function TokenCard({
   editAsset,
@@ -17,14 +18,14 @@ export default function TokenCard({
   userUsdTotal,
 }) {
   const [showInput, toggleInput] = useState(false)
-  const [showDelete, toggleDelete] = useState(false)
+  const [showEditButton, toggleEditButton] = useState(false)
   const [inputAmount, setInputAmount] = useState(amountHeld || 0)
 
   const amountInputElement = useRef(null)
 
   const { user } = useAuth()
 
-  const onAmountClick = () => {
+  const onEdit = () => {
     toggleInput(!showInput)
     setTimeout(() => amountInputElement.current?.focus(), 0)
   }
@@ -50,8 +51,8 @@ export default function TokenCard({
 
   return (
     <Card
-      onMouseEnter={() => toggleDelete(true)}
-      onMouseLeave={() => toggleDelete(false)}
+      onMouseEnter={() => toggleEditButton(true)}
+      onMouseLeave={() => toggleEditButton(false)}
       key={id}
     >
       <LogoBox>
@@ -69,44 +70,53 @@ export default function TokenCard({
         <p>{` $${beautifyNumber(price)}`}</p>
         {pctChange24h ? <Percentage24hChange value={pctChange24h} /> : null}
       </Box>
-      <Box>
+      <Box onClick={() => !showInput && onEdit()}>
         {showInput ? (
-          <form className="token-add-form" onSubmit={onAmountSubmit}>
-            <input
-              className="styled-input input-small"
+          <FormAddToken onSubmit={onAmountSubmit}>
+            <InputTokenAmount
               ref={amountInputElement}
               value={inputAmount}
               onChange={(e) => setInputAmount(e.target.value)}
               type="number"
               step="any"
             />
-            <button type="submit" className="btn token-add-btn btn-pad-more">
-              <i className="fa fa-floppy-o"></i>
-            </button>
-            <button
-              onClick={onCloseInput}
-              className="btn token-add-btn btn-pad-more"
-              style={{
-                backgroundColor: "orange",
-              }}
-            >
-              <i className="fa fa-close"></i>
-            </button>
-          </form>
+            <Spacer size={4} />
+            <FormButtons>
+              <button type="submit" className="btn token-add-btn btn-pad-more">
+                <i className="fa fa-floppy-o"></i>
+              </button>
+              <button
+                onClick={onCloseInput}
+                className="btn token-add-btn btn-pad-more"
+                style={{
+                  backgroundColor: "orange",
+                }}
+              >
+                <i className="fa fa-close"></i>
+              </button>
+              <DeleteButton onClick={onDelete}>
+                <i className="fa fa-trash"></i>
+              </DeleteButton>
+            </FormButtons>
+          </FormAddToken>
         ) : (
-          <p onClick={onAmountClick}>{beautifyNumber(amountHeld)}</p>
+          <p>{beautifyNumber(amountHeld)}</p>
         )}
 
-        <GreyedOutText>{`$${beautifyNumber(usdValueHeld)}`}</GreyedOutText>
+        {!showInput && (
+          <GreyedOutText>{`$${beautifyNumber(usdValueHeld)}`}</GreyedOutText>
+        )}
       </Box>
       <Box size={10}>
-        <p>{beautifyNumber((usdValueHeld / userUsdTotal) * 100, 1)}%</p>
+        {!showInput && (
+          <p>{beautifyNumber((usdValueHeld / userUsdTotal) * 100, 1)}%</p>
+        )}
       </Box>
-      {showDelete && (
-        <button onClick={onDelete} className="delete-button">
-          <i className="fa fa-trash"></i>
-        </button>
-      )}
+      {/* {showEditButton && !showInput && (
+        <EditButton onClick={onEdit}>
+          <i className="fa fa-edit"></i>
+        </EditButton>
+      )} */}
     </Card>
   )
 }
@@ -115,13 +125,7 @@ const Card = styled(GridRow)`
   border: 1px solid lightgray;
   border-radius: 8px;
   transition: color 0.25s ease;
-
-  :hover,
-  :focus,
-  :active {
-    color: #0070f3;
-    border: 1px solid #0070f3;
-  }
+  height: 70px;
 `
 
 const Logo = styled.img`
@@ -133,4 +137,51 @@ const Logo = styled.img`
     width: 32px;
     height: 32px;
   }
+`
+
+const Button = styled.button`
+  font-weight: 900;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+
+  @media only screen and (max-width: 520px) {
+    ${"" /* display: none; */}
+    ${"" /* right: 14%; */}
+  }
+`
+
+const DeleteButton = styled(Button)`
+  bottom: 0;
+  color: white;
+  background-color: coral;
+
+  &:hover {
+    background-color: tomato;
+  }
+`
+
+const EditButton = styled(Button)`
+  color: white;
+  background-color: skyblue;
+  position: absolute;
+  right: 8px;
+
+  &:hover {
+    background-color: deepskyblue;
+  }
+`
+
+const FormAddToken = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
+const InputTokenAmount = styled.input`
+  width: 100%;
+`
+
+const FormButtons = styled.div`
+  display: flex;
+  justify-content: flex-start;
 `
